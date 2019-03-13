@@ -10,6 +10,10 @@ Currently this repository consists of a single Java-library (`mc_math.jar`) cont
 
 - `src/queueing`: Folder containing the source code for `mc_math.jar`.  
 
+# Usage
+
+## `evaluate`
+
 # License
 Copyright 2019 Anders Reenberg Andersen, PhD
 
