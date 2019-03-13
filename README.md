@@ -2,7 +2,7 @@
 Evaluation of queueing models based on numerical evaluations of Markov chains.
 
 # Content
-Currently this repository consists of a single Java-library (`mc_math.jar`) containing a single class. This class, denoted `evaluate`, can be used to numerically evaluate the state probability distribution of a transient queueing system with finite capacity, i.e. a queueing system of type M/M/C/K. The parameters of the system (arrival rate, service rate, number of servers and capacity) are homogeneous. The model then takes either the initial state probability distribution or the initial number of non-idle servers. Uniformization (also denoted randomization and Jensen's method) is used to evaluate the probability distribution after time t. 
+Currently this repository consists of a single Java-library (`mc_math.jar`) containing a single class. This class, denoted `evaluate`, can be used to numerically evaluate the state probability distribution of a transient queueing system with finite capacity, i.e. a queueing system of type M/M/C/K. The parameters of the system (arrival rate, service rate, number of servers and capacity) are homogeneous. The model then takes either the initial state probability distribution or the initial number of non-idle servers. Uniformization (also denoted randomization and Jensen's method) is used to evaluate the probability distribution at time `t`. 
 
 # Files
 
@@ -26,6 +26,13 @@ Currently this repository consists of a single Java-library (`mc_math.jar`) cont
 - `c`: Total number of servers in the system (idle and non-idle).
 - `cap`: Capacity of the system.
 - `initDist`: Initial state probability distribution.
+
+### Methods
+
+- `uniformization(double t)`: Apply uniformization at time `t`.
+- `getStateDistribution()`: Returns the resulting probability state distribution.
+- `expectedValue()`: Returns the expected state.
+- `blockingProbability()`: Returns the blocking probability, i.e. the probability of attaining the last state in the state distribution.
 
 # License
 Copyright 2019 Anders Reenberg Andersen, PhD
