@@ -20,8 +20,12 @@ Currently this repository consists of a single Java-library (`mc_math.jar`) cont
 
 - `evaluate(double[] initDist,double l, double m, int c, int cap)`: Initial distribution as input.  
 
-`ch`: Number of servers currently in use.
-`l`: 
+- `ch`: Number of servers currently in use.
+- `l`: Arrival rate. 
+- `m`: Service rate.
+- `c`: Total number of servers in the system (idle and non-idle).
+- `cap`: Capacity of the system.
+- `initDist`: Initial state probability distribution.
 
 # License
 Copyright 2019 Anders Reenberg Andersen, PhD
