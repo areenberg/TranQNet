@@ -29,8 +29,8 @@ Currently this repository consists of a single Java-library (`mc_math.jar`) cont
 
 ### Methods
 
-- `void uniformization(double t)`: Apply uniformization for time `t`.
-- `double[] getStateDistribution()`: Returns the resulting probability state distribution.
+- `void uniformization(double t)`: Calculates the state distribution at time `t` using uniformization.
+- `double[] getStateDistribution()`: Returns the resulting state distribution.
 - `double expectedValue()`: Returns the expected state.
 - `double blockingProbability()`: Returns the blocking probability, i.e. the probability of attaining the last state in the state distribution.
 
