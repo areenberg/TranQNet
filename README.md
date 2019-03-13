@@ -12,7 +12,16 @@ Currently this repository consists of a single Java-library (`mc_math.jar`) cont
 
 # Usage
 
-## `evaluate`
+## Class `evaluate`
+
+### Constructors
+
+- `evaluate(int ch,double l, double m, int c, int cap)`: Number of non-idle servers as input.
+
+- `evaluate(double[] initDist,double l, double m, int c, int cap)`: Initial distribution as input.  
+
+`ch`: Number of servers currently in use.
+`l`: 
 
 # License
 Copyright 2019 Anders Reenberg Andersen, PhD
