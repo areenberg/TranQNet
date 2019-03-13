@@ -6,7 +6,7 @@ Currently this repository consists of a single Java-library (`mc_math.jar`) cont
 
 # Files
 
-- `mc_math.jar`: Library which contains the `evaluate` class.
+- `mc_math.jar`: Library containing the `evaluate` class.
 
 - `src/queueing`: Folder containing the source code for `mc_math.jar`.  
 
