@@ -6,7 +6,7 @@ Currently this repository consists of a single Java-library (`mc_math.jar`) cont
 
 # Files
 
-- `mc_math.jar`: Library containing the `evaluate` class.
+- `mc_math.jar`: Library containing a single class (`evaluate`) which calculates the state distribution at time `t` of an M/M/C/K queueing system.
 
 - `src/queueing`: Folder containing the source code for `mc_math.jar`.  
 
