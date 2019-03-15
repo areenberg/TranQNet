@@ -2,7 +2,7 @@
 To easily and efficiently evaluate queueing models based on numerical evaluations of their underlying Markov chain.
 
 # Content
-Currently this repository consists of a single Java-library (`mc_math.jar`) containing a single class. This class, denoted `evaluate`, can be used to numerically evaluate the state probability distribution of a transient queueing system with finite capacity, i.e. a queueing system of type M/M/C/K. The parameters of the system (arrival rate, service rate, number of servers and capacity) are homogeneous. The model then takes either the initial state probability distribution or the initial number of non-idle servers. Uniformization (also denoted randomization and Jensen's method) is used to evaluate the probability distribution at time `t`. 
+Currently this repository consists of a single Java-library (`mc_math.jar`) containing a single class. This class, denoted `evaluate`, can be used to numerically evaluate the state probability distribution of a transient queueing system with finite capacity, i.e. a queueing system of type M/M/C/K. The parameters of the system (arrival rate, service rate, number of servers and capacity) are homogeneous. The model then takes either the initial state probability distribution or the initial number of occupied servers. Uniformization (also denoted randomization and Jensen's method) is used to evaluate the probability distribution at time `t`. 
 
 # Files
 
@@ -17,14 +17,14 @@ Calculates the state distribution at time `t` for an M/M/C/K queueing system.
 
 ### Constructors
 
-- `evaluate(int ch, double l, double m, int c, int cap)`: Number of non-idle servers as input.
+- `evaluate(int ch, double l, double m, int c, int cap)`: Number of occupied servers as input.
 
-- `evaluate(double[] initDist, double l, double m, int c, int cap)`: Initial distribution as input.  
+- `evaluate(double[] initDist, double l, double m, int c, int cap)`: Initial state distribution as input.  
 
-- `ch`: Number of servers currently in use.
+- `ch`: Number of currently occupied servers.
 - `l`: Arrival rate. 
 - `m`: Service rate.
-- `c`: Total number of servers in the system (idle and non-idle).
+- `c`: Total number of servers in the system.
 - `cap`: Capacity of the system.
 - `initDist`: Initial state probability distribution.
 
