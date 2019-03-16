@@ -37,13 +37,12 @@ public class evaluate {
   int currentlyUsed; //current number of non-idle servers
   
   
-  
-  public evaluate(int ch,double l, double m, int c, int cap){ //class constructor with non-idle servers as input 
-      
-      currentlyUsed = ch;
-      lambda = l;
-      mu = m;
-      servers = c;
+  public evaluate(int currentlyUsed, double lambda, double mu, int servers, int cap){ //class constructor with occupied servers as input 
+     
+      this.currentlyUsed = currentlyUsed;
+      this.lambda = lambda;
+      this.mu = mu;
+      this.servers = servers;
       
       Ns = cap + 1;
       
@@ -53,11 +52,11 @@ public class evaluate {
   }
   
   
-  public evaluate(double[] initDist,double l, double m, int c, int cap){ //class constructor with distribution input
+  public evaluate(double[] initDist, double lambda, double mu, int servers, int cap){ //class constructor with state distribution input
       
-      lambda = l;
-      mu = m;
-      servers = c;
+      this.lambda = lambda;
+      this.mu = mu;
+      this.servers = servers;
       
       Ns = cap + 1;
       
@@ -89,18 +88,7 @@ public class evaluate {
         }  
       }
       
-      //System.out.println("initDist");
-      //for(i=0; i<initDist.length; i++){
-      //    System.out.print(initDist[i] + " ");
-      //}
-      //System.out.println();
       
-      
-      //System.out.println("pi0");
-      //for(i=0; i<pi0.length; i++){
-      //    System.out.print(pi0[i] + " ");
-      //}
-      //System.out.println();
   }
   
   
