@@ -113,12 +113,11 @@ public class evaluate {
   
     
   private void transitionratematrix(){
-        //generates the transition rate matrix for a M/M/C/K queueing system in Harwell-Boeing format
+        //generates the transition rate matrix for an M/M/C/K queueing system in Harwell-Boeing format
         
       
-        int nz = Ns+(Ns-1)*2;
-        gamma = 0;
-
+        int nz = Ns+(Ns-1)*2; //non-zero elements (capacity x 2 + diagonal)
+        
         int i; //generate state space
         int[] S = new int[Ns];
         for(i=0; i<Ns; i++){
@@ -150,7 +149,7 @@ public class evaluate {
                 dv += val;
                 Q[0][rn-1] = val;
                 Q[1][rn-1] = (i+1)+1;
-                rn += 1;        
+                rn++;        
             }
             if(v>0){ //backward
                 if (v<=servers){
@@ -161,14 +160,14 @@ public class evaluate {
                 dv += val;
                 Q[0][rn-1] = val;
                 Q[1][rn-1] = (i+1)-1;
-                rn += 1;        
+                rn++;        
             }
             
             
             //add diagional element
             Q[0][rn-1] = -1*dv;
             Q[1][rn-1] = i+1;
-            rn += 1;
+            rn++;
             
             Q[2][i+1] = rn;
             
@@ -178,8 +177,6 @@ public class evaluate {
             }
         }
         
-        
-        //System.out.println("Transition rate matrix completed.");
         
     }
     
@@ -203,8 +200,6 @@ public class evaluate {
             }
             
         }
-        
-        //System.out.println("Converted to transition probability matrix.");
         
    }  
     
