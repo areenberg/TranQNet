@@ -2,7 +2,7 @@
 To easily and efficiently evaluate queueing models based on numerical evaluations of their underlying Markov chain.
 
 # Content
-In this folder you will find the **MC Math** library, both as a `.jar` file (`mc_math.jar`) and source code (hidden in the folder named `src`). The class, denoted `evaluate`, can be used to numerically evaluate the state probability distribution of a transient queueing system with finite capacity, i.e. a queueing system of type M/M/C/K. The parameters of the system (arrival rate, service rate, number of servers and capacity) are homogeneous. The model then takes either the initial state probability distribution or the initial number of occupied servers. Uniformization (also denoted randomization and Jensen's method) is used to evaluate the probability distribution at time `t`. 
+In this folder you will find the **MC Math** library, both as a `.jar` file (`mc_math.jar`) and source code (in the folder named `src`). The class, denoted `evaluate`, can be used to numerically evaluate the state probability distribution of a transient queueing system with finite capacity, i.e. a queueing system of type M/M/C/K. The parameters of the system (arrival rate, service rate, number of servers and capacity) are homogeneous. The model then takes either the initial state probability distribution or the initial number of occupied servers. Uniformization (also denoted randomization and Jensen's method) is used to evaluate the probability distribution at time `t`. 
 
 # Files
 
