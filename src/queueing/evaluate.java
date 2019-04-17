@@ -36,10 +36,42 @@ public class evaluate {
   double[] pi; //state probability distribution after time t
   int currentlyUsed; //current number of non-idle servers
   
+  public evaluate(double[] initDist, create network){
+      //constructur for the custom queueing system with 
+      //state distribution as input.
+      
+      
+      this.pi0 = initDist;
+      this.gamma = network.maxDiag;
+      this.Q = network.Q;
+      
+  }
   
-  public evaluate(int currentlyUsed, double lambda, double mu, int servers, int cap){ //class constructor with occupied servers as input 
+  
+  public evaluate(int[] occupiedServers, create network){
+      //constructur for the custom queueing system with
+      //current number of occupied servers as input.
+      
+      this.gamma = network.maxDiag;
+      this.Q = network.Q;
+      
+      pi0 = new double[Q[2].length-1];
+      int n = 1; int prod = 1;
+      int i; 
+      for (i=(occupiedServers.length-1); i>=0; i--){
+          n += occupiedServers[i]*prod;
+          prod *= (network.cap[i]+1);
+      }
+      pi0[n-1] = 1;
+      
+  }
+  
+  
+  public evaluate(int occupiedServers, double lambda, double mu, int servers, int cap){ 
+      //constructor for the M/M/C/K model with occupied servers as input 
      
-      this.currentlyUsed = currentlyUsed;
+      
+      this.currentlyUsed = occupiedServers;
       this.lambda = lambda;
       this.mu = mu;
       this.servers = servers;
@@ -52,7 +84,8 @@ public class evaluate {
   }
   
   
-  public evaluate(double[] initDist, double lambda, double mu, int servers, int cap){ //class constructor with state distribution input
+  public evaluate(double[] initDist, double lambda, double mu, int servers, int cap){ 
+       //constructor for the M/M/C/K model with state distribution as input
       
       this.lambda = lambda;
       this.mu = mu;
@@ -221,10 +254,10 @@ public class evaluate {
     }  
     
   
-  public void uniformization(double t){
+  public void uniformization(double t, double eps){
         //apply uniformization (also denoted randomization) for amount of time t
+        //and tolerance eps (e.g. t=1 and eps=0.000001).
         
-        double eps = 0.000001; //tolerance
         int K = (int) numbiter(t,eps);
       
         double[] y;

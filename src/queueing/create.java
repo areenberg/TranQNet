@@ -31,6 +31,7 @@ public class create {
     double[] mu; //service rate at each queue node 
     int[] servers; //number of servers at each queue node
     int[] cap; //capacity at each queue node
+    double maxDiag; //maximum absolute diagonal element in Q
     boolean rejectWhenFull; //Can customers be rejected when downstream nodes are overcrowded
     
     
@@ -60,7 +61,7 @@ public class create {
         
     }
     
-    private void checkAdjancency(){ //get network characteristics from adjacency matrix (A) 
+    private void checkAdjancency(){ //get network characteristics from the adjacency matrix 
        
         rates = new double[Adj.length][Adj[0].length];
         srcNodes = 0;
@@ -124,6 +125,7 @@ public class create {
         s[queueNodes-1] = -1;
         
         boolean rq;
+        maxDiag = 0;
         
         int[] qProd = new int[queueNodes];
         int prod = 1;
@@ -167,6 +169,8 @@ public class create {
                             c = r - qProd[q] + qProd[q1-srcNodes];
                             val = rates[srcNodes+q][q1]*min(s[q],servers[q]);
                             diag -= val;
+                            Q[0][i] = val;
+                            Q[1][i] = c;
                             i++;
                             //System.out.println("Transfer " + val);
                           }else if (q1==(Adj[0].length-1)||rejectWhenFull){ //reject or remove
@@ -174,6 +178,8 @@ public class create {
                                 c = r - qProd[q];
                                 val = rates[srcNodes+q][q1]*min(s[q],servers[q]);
                                 diag -= val;
+                                Q[0][i] = val;
+                                Q[1][i] = c;
                                 i++;
                                 //System.out.println("Reject or remove " + val);
                                 rq = false;
@@ -189,8 +195,15 @@ public class create {
             Q[1][i] = r;
             i++;
             
+            //update maxDiag
+            if (diag<maxDiag){
+                maxDiag = diag;
+            }
+            
         }
         Q[2][Ns] = nz+1;
+        
+        maxDiag = -1*maxDiag;
         
     }
     
@@ -297,6 +310,29 @@ public class create {
         }else{
             return b;
         }
+    }
+    
+    
+    public double[][] getTransitionRateMatrix(){
+        //return the transition rate matrix
+        
+        double[][] A = new double[3][];
+        int i; int j;
+        for (i=0; i<Q.length; i++){
+            A[i] = new double[Q[i].length];
+            for (j=0; j<Q[i].length; j++){
+                A[i][j] = Q[i][j];
+            }
+        }
+        
+        return A;
+    }
+    
+    public double getUniformizationRate(){
+        //returns the maximum absolute diagonal element
+        //in the transition rate matrix.
+        
+        return maxDiag;
     }
     
             
