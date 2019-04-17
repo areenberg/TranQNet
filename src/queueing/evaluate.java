@@ -35,16 +35,20 @@ public class evaluate {
   double[] pi0; //initial state probability distribution
   double[] pi; //state probability distribution after time t
   int currentlyUsed; //current number of non-idle servers
+  int queueNodes; //number of queue nodes in the system
+  int[] cap; //capacity at each queue node
   
   public evaluate(double[] initDist, create network){
       //constructur for the custom queueing system with 
       //state distribution as input.
       
-      
       this.pi0 = initDist;
       this.gamma = network.maxDiag;
       this.Q = network.Q;
+      this.queueNodes = network.queueNodes;
+      this.cap = network.cap;
       
+      Ns = Q[2].length-1;
   }
   
   
@@ -54,6 +58,8 @@ public class evaluate {
       
       this.gamma = network.maxDiag;
       this.Q = network.Q;
+      this.queueNodes = network.queueNodes;
+      this.cap = network.cap;
       
       pi0 = new double[Q[2].length-1];
       int n = 1; int prod = 1;
@@ -64,10 +70,12 @@ public class evaluate {
       }
       pi0[n-1] = 1;
       
+      Ns = Q[2].length-1; 
+      
   }
   
   
-  public evaluate(int occupiedServers, double lambda, double mu, int servers, int cap){ 
+  public evaluate(int occupiedServers, double lambda, double mu, int servers, int K){ 
       //constructor for the M/M/C/K model with occupied servers as input 
      
       
@@ -76,25 +84,23 @@ public class evaluate {
       this.mu = mu;
       this.servers = servers;
       
-      Ns = cap + 1;
+      Ns = K + 1;
       
       transitionratematrix();
-      stochasticmatrix();
       initialDistribution();
   }
   
   
-  public evaluate(double[] initDist, double lambda, double mu, int servers, int cap){ 
+  public evaluate(double[] initDist, double lambda, double mu, int servers, int K){ 
        //constructor for the M/M/C/K model with state distribution as input
       
       this.lambda = lambda;
       this.mu = mu;
       this.servers = servers;
       
-      Ns = cap + 1;
+      Ns = K + 1;
       
       transitionratematrix();
-      stochasticmatrix();
       
       pi0 = new double[Ns];
       int i;
@@ -213,9 +219,11 @@ public class evaluate {
         
     }
     
-  private void stochasticmatrix(){
+  private double[] stochasticmatrix(){
         //converts Q to the stochastic matrix
       
+        double[] P = new double[Q[0].length];
+        
         int rstart;
         int rstop;
         
@@ -226,14 +234,15 @@ public class evaluate {
             for(j=(rstart-1); j<(rstop-1); j++){
                 c = (int) Q[1][j];
                 if (c==r){
-                    Q[0][j] = Q[0][j]*(1/gamma)+1;
+                    P[j] = Q[0][j]*(1/gamma)+1;
                 }else{
-                    Q[0][j] = Q[0][j]*(1/gamma);
+                    P[j] = Q[0][j]*(1/gamma);
                 }               
             }
             
         }
         
+        return P;
    }  
     
     
@@ -258,10 +267,12 @@ public class evaluate {
         //apply uniformization (also denoted randomization) for amount of time t
         //and tolerance eps (e.g. t=1 and eps=0.000001).
         
+        double[] P = stochasticmatrix();
+        
         int K = (int) numbiter(t,eps);
       
         double[] y;
-        double[] A = new double[Q[0].length];
+        double[] A = new double[P.length];
         double[] z = new double[Ns];
         double gammat = gamma*t;
         
@@ -277,8 +288,8 @@ public class evaluate {
         for(k=1; k<=K; k++){
  
             //regular scalar multiplication
-            for(w=0; w<Q[0].length; w++){
-                A[w] = Q[0][w]*(gammat/k);
+            for(w=0; w<P.length; w++){
+                A[w] = P[w]*(gammat/k);
             }
             
             //vector matrix multiplication
@@ -304,52 +315,68 @@ public class evaluate {
         
     }
   
-  public double blockingProbability(){
-      
-      double pB = pi[pi.length-1];
-      
-      return pB;
-  }
   
   public double[] getStateDistribution(){
+      //return the state distribution
       
-      int i;
-      double[] stateDistOut = new double[pi.length];
-      for(i=0; i<pi.length; i++){
-          stateDistOut[i] = pi[i];
-      }
-      
-      return stateDistOut;
+      return pi;
   }
   
+  public double[][] getMarginalDistributions(){
+      //calculates and returns the marginal probability
+      //distributions for each queue in the system.
+      
+      double dist[][] = null;
+      int[] state;
+      if (queueNodes>1){
+          dist = new double[queueNodes][];
+          int q; int s;
+          for (q=0; q<queueNodes; q++){
+              dist[q] = new double[cap[q]+1];
+              state = new int[queueNodes];
+              state[queueNodes-1] = -1;
+              for (s=0; s<pi.length; s++){
+                  state = getNextState(state);
+                  dist[q][state[q]] += pi[s];
+              }
+          }
+      }else{
+          dist = new double[1][];
+          dist[0] = pi;
+      }
+      
+      return dist;
+  }
   
-  public double expectedValue(){
-        //calculates the expected value of the distribution dist
-        double expVal = 0;
+  public double[] expectedValue(){
+        //calculates the expected value for each queue in the system
+        double[] expVal = new double[queueNodes];
+        double[][] dist = getMarginalDistributions();
         
-        int i;
-        for(i=0; i<pi.length; i++){
-            expVal += i * pi[i];
+        int q; int i;
+        for (q=0; q<queueNodes; q++){
+            for(i=0; i<dist[q].length; i++){
+                expVal[q] += i*dist[q][i];
+            }
         }
         
         return expVal;
     }
     
     
- private static double[] copydoublevec(double[] x){
+ private double[] copydoublevec(double[] x){
         
-        int l = x.length;
-        double[] y = new double[l];
+        double[] y = new double[x.length];
         
         int i;
-        for(i=0; i<l; i++){
+        for(i=0; i<x.length; i++){
             y[i] = x[i];
         }
         
         return y;
     }
 
-private static double[] scalarmult(double[] x, double c){
+private double[] scalarmult(double[] x, double c){
         
         int l = x.length;
         int i;
@@ -360,7 +387,7 @@ private static double[] scalarmult(double[] x, double c){
         return x;
     }
 
-private static double[] fillout(double[] v, double k){
+private double[] fillout(double[] v, double k){
         
         int l = v.length;
         int i;
@@ -371,15 +398,28 @@ private static double[] fillout(double[] v, double k){
         return v;
     }
 
-private static double[] addvectors(double[] x, double[] y){
+private double[] addvectors(double[] x, double[] y){
         
-        int l = x.length;
-        double[] z = new double[l];
+        double[] z = new double[x.length];
         int i;
-        for(i=0; i<l; i++){
+        for(i=0; i<x.length; i++){
             z[i] = x[i]+y[i];
         }    
         return z;
+    }
+
+
+private int[] getNextState(int[] state){
+        //returns the next state using the current state as input.
+        
+        int q = queueNodes-1; //move backwards from queue number
+        while(state[q]==cap[q]){
+            state[q] = 0;
+            q--;
+        }
+        state[q]++;
+        
+        return state;
     }
   
   

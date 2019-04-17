@@ -316,16 +316,7 @@ public class create {
     public double[][] getTransitionRateMatrix(){
         //return the transition rate matrix
         
-        double[][] A = new double[3][];
-        int i; int j;
-        for (i=0; i<Q.length; i++){
-            A[i] = new double[Q[i].length];
-            for (j=0; j<Q[i].length; j++){
-                A[i][j] = Q[i][j];
-            }
-        }
-        
-        return A;
+        return Q;
     }
     
     public double getUniformizationRate(){
