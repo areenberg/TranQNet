@@ -52,9 +52,9 @@ public class evaluate {
   }
   
   
-  public evaluate(int[] occupiedServers, create network){
+  public evaluate(int[] occupiedCap, create network){
       //constructur for the custom queueing system with
-      //current number of occupied servers as input.
+      //current amount of occupied capacity as input.
       
       this.gamma = network.maxDiag;
       this.Q = network.Q;
@@ -64,8 +64,8 @@ public class evaluate {
       pi0 = new double[Q[2].length-1];
       int n = 1; int prod = 1;
       int i; 
-      for (i=(occupiedServers.length-1); i>=0; i--){
-          n += occupiedServers[i]*prod;
+      for (i=(occupiedCap.length-1); i>=0; i--){
+          n += occupiedCap[i]*prod;
           prod *= (network.cap[i]+1);
       }
       pi0[n-1] = 1;
@@ -75,11 +75,11 @@ public class evaluate {
   }
   
   
-  public evaluate(int occupiedServers, double lambda, double mu, int servers, int K){ 
+  public evaluate(int occupiedCap, double lambda, double mu, int servers, int K){ 
       //constructor for the M/M/C/K model with occupied servers as input 
      
       
-      this.currentlyUsed = occupiedServers;
+      this.currentlyUsed = occupiedCap;
       this.lambda = lambda;
       this.mu = mu;
       this.servers = servers;
@@ -312,8 +312,9 @@ public class evaluate {
         double constant = Math.exp(-1*gammat);
         pi = scalarmult(pi,constant);
         
-        
-    }
+  }
+  
+  
   
   
   public double[] getStateDistribution(){
@@ -422,7 +423,59 @@ private int[] getNextState(int[] state){
         return state;
     }
   
-  
+private double onenorm(double[] x){
+ 
+    double n = 0;
+    double y;
+    int l = x.length;
+    int i;
+    for(i=0; i<l; i++){
+        n = n + Math.abs(x[i]);
+    }
     
+ return n;
+}  
+
+private double sumoverdouble(double[] M){
+    double s = 0;
+    int l = M.length;
+    int i;
+    for(i=0; i<l; i++){
+        s = s + M[i];
+    }
     
+    return s;
+}
+
+
+private double relativetol(double[] x_old, double[] x_new){
+    
+    int l = x_old.length;
+    
+    double[] diff = new double[l];
+    
+    double largest = 0;
+    int i;
+    for(i=0; i<l; i++){
+        diff[i] = Math.abs(x_new[i]-x_old[i])/Math.abs(x_old[i]);
+        if(diff[i]>largest){
+            largest = diff[i];
+        }
+    }
+    
+    return largest;
+} 
+
+private int adjustspace(int m_old, double eps){
+         
+         int m;
+         double u = eps/m_old;
+         
+         m = (int) Math.round(45*Math.exp(-1*u))+5;
+         
+         return m;
+}
+
+
+
 }

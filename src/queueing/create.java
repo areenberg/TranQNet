@@ -124,7 +124,8 @@ public class create {
         int[] s = new int[queueNodes]; //state
         s[queueNodes-1] = -1;
         
-        boolean rq;
+        boolean sourced;
+        boolean reject;
         maxDiag = 0;
         
         int[] qProd = new int[queueNodes];
@@ -143,49 +144,77 @@ public class create {
             
             diag = 0;
             for (q=0; q<queueNodes; q++){
-              //add
+              //sourcing
+              sourced = false;
               for (q1=0; q1<srcNodes; q1++){
                 if (Adj[q1][srcNodes+q]>0&&s[q]<cap[q]){
                     c = r + qProd[q];
                     val = rates[q1][srcNodes+q];
                     diag -= val;
-                    if (Q[0][i]==0){
-                        Q[0][i] = val;
-                        Q[1][i] = c;
-                        i++;
-                    }else{
-                        Q[0][i] += val;
-                    }
+                    Q[0][i] += val;
+                    Q[1][i] = c;
+                    sourced = true;
                     
-                    //System.out.println("Source " + val);
                 }
               }
+              if (sourced){
+                //System.out.println("Source " + Q[0][i]);
+                i++;
+              }
               
-              //remove and transfer
-              rq = true;
-              for (q1=srcNodes; q1<Adj[0].length; q1++){ //receiving node
-                      if ((q1-srcNodes)!=q&&Adj[srcNodes+q][q1]>0&&s[q]>0){
-                          if (q1<(Adj[0].length-1)&&s[q1-srcNodes]<cap[q1-srcNodes]){ //transfer
-                            c = r - qProd[q] + qProd[q1-srcNodes];
-                            val = rates[srcNodes+q][q1]*min(s[q],servers[q]);
-                            diag -= val;
-                            Q[0][i] = val;
-                            Q[1][i] = c;
-                            i++;
-                            //System.out.println("Transfer " + val);
-                          }else if (q1==(Adj[0].length-1)||rejectWhenFull){ //reject or remove
-                              if (rq){
+              
+              
+              //transfer and remove
+              if (s[q]>0){  
+                reject = false;
+                for (q1=srcNodes; q1<Adj[0].length; q1++){ //receiving node
+                        if ((q1-srcNodes)!=q&&Adj[srcNodes+q][q1]>0){ //basic demands
+                            if (q1<(Adj[0].length-1)&&s[q1-srcNodes]<cap[q1-srcNodes]){ //transfer
+                                c = r - qProd[q] + qProd[q1-srcNodes];
+                                val = rates[srcNodes+q][q1]*min(s[q],servers[q]);
+                                diag -= val;
+                                Q[0][i] = val;
+                                Q[1][i] = c;
+                                //System.out.println("Transfer " + Q[0][i]);
+                                i++;
+                               
+                            }else if(q1<(Adj[0].length-1)&&s[q1-srcNodes]==cap[q1-srcNodes]){
+                                reject = true;
+                            }else if (q1==(Adj[0].length-1)){ //remove
                                 c = r - qProd[q];
                                 val = rates[srcNodes+q][q1]*min(s[q],servers[q]);
                                 diag -= val;
                                 Q[0][i] = val;
                                 Q[1][i] = c;
-                                i++;
-                                //System.out.println("Reject or remove " + val);
-                                rq = false;
-                              }
-                          }
-                      }
+                                
+                                if (rejectWhenFull==false||reject==false){
+                                    //System.out.println("Remove " + Q[0][i]);
+                                    i++;
+                                }
+                            
+                                
+                            }
+                        }
+                }
+              
+                //transfer-reject
+                if (rejectWhenFull&&reject){
+                    for (q1=srcNodes; q1<(Adj[0].length-1); q1++){
+                        if ((q1-srcNodes)!=q&&Adj[srcNodes+q][q1]>0&&
+                                s[q1-srcNodes]==cap[q1-srcNodes]){
+                            
+                                c = r - qProd[q];
+                                val = rates[srcNodes+q][q1]*min(s[q],servers[q]);
+                                diag -= val;
+                                Q[0][i] += val; //Remember: Account for rejections from multiple receiving queues at the same time
+                                Q[1][i] = c;
+                                reject = true;
+                        }
+                    }
+                    //System.out.println("Reject " + Q[0][i]);
+                    i++;
+                    
+                }
               }
               
               
@@ -201,7 +230,7 @@ public class create {
             }
             
         }
-        Q[2][Ns] = nz+1;
+        Q[2][Ns] = i;
         
         maxDiag = -1*maxDiag;
         
@@ -219,14 +248,15 @@ public class create {
 
     private int numberNonZero(int Ns){
         int nz = 0;
-        boolean transfer; //indicates if i is a transfer queue
         
         //non-diagonal elements
         int i; int j; int k;
-        int q; int l; int g;
+        int q; int l; int tr; int rm;
         for (i=0; i<(Adj.length-1); i++){
-            q = 0;
-            transfer = false; 
+            q = 0; //receiving queue
+            
+            tr = 0; //number of receiving queues (transfer)
+            rm = 0; //remove
             for (j=srcNodes; j<Adj[i].length; j++){
                 if (Adj[i][j]>0){
                     if (i<srcNodes){ //i is a source node
@@ -240,6 +270,7 @@ public class create {
                         nz += l;
                     }else{ //i is a queue node
                         if (j==(Adj[i].length-1)){ //discharge
+                            rm++;
                             l = cap[(i-srcNodes)];
                             for (k=0; k<queueNodes; k++){
                                 if (k!=(i-srcNodes)){
@@ -249,38 +280,35 @@ public class create {
                             //System.out.println("Remove: " + l);
                             nz += l;
                         }else{ //transfer
-                            transfer = true;
+                            tr++;
                             l = cap[(i-srcNodes)];
                             for (k=0; k<queueNodes; k++){
                                 if (k!=(i-srcNodes)&&k!=q){
                                     l *= (cap[k]+1);
                                 }
                             }
-                            l *= cap[q];
+                            
+                            if (rejectWhenFull){
+                                l *= cap[q] + 1;
+                            }else{
+                                l *= cap[q];
+                            }
+                            
+                            
                             //System.out.println("Transfer: " + l);
                             nz += l;
+                            
                         }
                     }
                     
-                }else if (rejectWhenFull && transfer && 
-                        j==(Adj[i].length-1) && i>=srcNodes){
-                        l = 1; g = 1;
-                        for (k=0; k<queueNodes; k++){
-                            if (k!=(i-srcNodes)&&Adj[i][(k+srcNodes)]>0){
-                                l *= (cap[k]+1); //receiving queues
-                            }else if (k!=(i-srcNodes)){
-                                g *= (cap[k]+1); //others not receiving from this queue
-                            }
-                        }
-                        l -= 1; //state in which all receiving queues are 0
-                        l *= cap[(i-srcNodes)];
-                        l *= g;
-                        //System.out.println("Rejections: " + l);
-                        nz += l;
                 }
                 q++;
             }
-            
+            if (rejectWhenFull&&(rm+tr)>1){
+                for (j=1; j<(rm+tr); j++){
+                    nz -= cap[(i-srcNodes)]*j*binomialCoefficient((rm+tr),(j+1)); //subtract excess rejections
+                }    
+            }    
         }
         
         //add diagonal elements
@@ -310,6 +338,30 @@ public class create {
         }else{
             return b;
         }
+    }
+    
+    private int binomialCoefficient(int n, int k){
+        //From The flying keyboard
+        // 2018 TheFlyingKeyboard and released under MIT License
+        // theflyingkeyboard.net
+        
+        int top = 1;
+        for(int i = n; i > k; --i){
+            top *= i;
+        }
+        return top / factorial(n - k);
+    }
+    
+    private int factorial(int n){
+        //From The flying keyboard
+        // 2018 TheFlyingKeyboard and released under MIT License
+        // theflyingkeyboard.net
+        
+        int fact = 1;
+        for(int i = 2; i <= n; i++){
+            fact *= i;
+        }
+        return fact;
     }
     
     
