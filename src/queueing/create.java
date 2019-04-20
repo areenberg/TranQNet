@@ -206,7 +206,7 @@ public class create {
                                 c = r - qProd[q];
                                 val = rates[srcNodes+q][q1]*min(s[q],servers[q]);
                                 diag -= val;
-                                Q[0][i] += val; //Remember: Account for rejections from multiple receiving queues at the same time
+                                Q[0][i] += val;
                                 Q[1][i] = c;
                                 reject = true;
                         }
