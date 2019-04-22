@@ -45,7 +45,7 @@ Create the model.
 create network = new create(A,lambda,mu,c,cap,rejectWhenFull);
 ```
 
-Prepare the model for evaluation by employing the `network` object.
+Prepare the evaluation calculations by plugging the `network` object into `evaluate`.
 
 ```
 evaluate system = new evaluate(occupiedCap,network);
