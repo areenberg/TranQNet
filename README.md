@@ -32,6 +32,50 @@ double[][] A = {{0,1,0,0,0},
                 {0,0,0,0,0}};
 ```
 
+Define the remaining characteristics of the system, i.e. the arrival rate (`lambda`), service rates (`mu`), number of servers (`c`), capacity (`cap`), and how much of the capacity is occupied at time=0 (`occupiedCap`). If customers at queue 1 should be rejected when queue 2 and 3 are full, set `rejectWhenFull = true` and otherwise `false`.  
+
+```
+double[] lambda = {2}; double[] mu = {1.5,4,2.5}; int[] c = {2,1,2}; int[] cap = {20,20,20};
+int[] occupiedCap = {0,0,0}; boolean rejectWhenFull = false;
+```
+
+Create the model.
+
+```
+create network = new create(A,lambda,mu,c,cap,rejectWhenFull);
+```
+
+Prepare the model for evaluation by employing the `network` object.
+
+```
+evaluate system = new evaluate(occupiedCap,network);
+```
+
+Evaluate the behavior of the system at time=5 with a precision of 1x10^-9.
+
+```
+system.uniformization(5,1e-9);
+```
+
+Get the marginal state distribution for each of the network queues.
+
+```
+double[][] dist = system.getMarginalDistributions();
+```
+
+Get the expected number of customers at each queue.
+
+```
+double[] expValue = system.expectedValue();
+```
+
+Evaluate the steady-state behavior of the system (i.e. at time=Inf) with a precision of 1x10^-6.
+
+```
+system.gauss_seidel(1e-6);
+```
+
+
 
 # License
 Copyright 2019 Anders Reenberg Andersen, PhD
