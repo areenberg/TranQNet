@@ -1,39 +1,81 @@
 # Purpose
-To easily and efficiently evaluate queueing models based on numerical evaluations of their underlying Markov chain.
+This library is specialized in evaluating any M/M/C/K queueing network that can be defined by an adjacency matrix, i.e. the model does not have to exist on *product form*. A weighted directed adjacency matrix is used by the class `create` to automatically construct the infinitesimal generator for the network at hand. The resulting object is then used as input in the class `evaluate` to retrieve the behavior of the network.
 
-# Content
-In this folder you will find the **MC Math** library, both as a `.jar` file (`mc_math.jar`) and source code (in the folder named `src`). The class, denoted `evaluate`, can be used to numerically evaluate the state probability distribution of a transient queueing system with finite capacity, i.e. a queueing system of type M/M/C/K. The parameters of the system (arrival rate, service rate, number of servers and capacity) are homogeneous. The model then takes either the initial state probability distribution or the initial number of occupied servers. Uniformization (also denoted randomization and Jensen's method) is used to evaluate the probability distribution at time `t`. 
+# Basic Overview
 
-# Files
+## Files
 
-- `mc_math.jar`: Library containing the class `evaluate`.
+- `mc_math.jar`: The library file.
 
-- `src/queueing`: Folder containing the source code for `mc_math.jar`.  
+## Classes
 
-# Usage
+- `create`: Automatically constructs the infinitesimal generator (the transition rate matrix) and various other parameters.
 
-## Class `evaluate`
-Calculates the state distribution at time `t` for an M/M/C/K queueing system.
+- `evaluate`: Uses an object defined with `create` to evaluate the queueing network.
 
-### Constructors
+# Getting Started
+Firstly, download and add `mc_math.jar` to your Java-project.
 
-- `evaluate(int ch, double l, double m, int c, int cap)`: Number of occupied servers as input.
+Now import the `queueing` classes.
 
-- `evaluate(double[] initDist, double l, double m, int c, int cap)`: Initial state distribution as input.  
+```
+import queueing.*;
+```
 
-- `ch`: Number of currently occupied servers.
-- `l`: Arrival rate. 
-- `m`: Service rate.
-- `c`: Total number of servers in the system.
-- `cap`: Capacity of the system.
-- `initDist`: Initial state probability distribution.
+Define the weighted directed adjacency matrix using the structure: (1) Sources nodes, (2) queueing nodes, and (3) sink node. In this example, we have three queueing nodes. A single source node feeds all arriving customers into the first queueing node. The flow then splits into three parts sending 45% of the customers to queue 2, 30% to queue 3, and 25% to the sink node. Queue 2 and 3 send all customers to the sink after their service has been completed.
 
-### Methods
+```
+double[][] A = {{0,1,0,0,0},
+                {0,0,0.45,0.30,0.25},
+                {0,0,0,0,1},
+                {0,0,0,0,1},
+                {0,0,0,0,0}};
+```
 
-- `void uniformization(double t)`: Calculates the state distribution at time `t` using uniformization.
-- `double[] getStateDistribution()`: Returns the resulting state distribution.
-- `double expectedValue()`: Returns the expected state.
-- `double blockingProbability()`: Returns the blocking probability, i.e. the probability of attaining the last state in the state distribution.
+Define the remaining characteristics of the system, i.e. the arrival rate (`lambda`), service rates (`mu`), number of servers (`c`), capacity (`cap`), and how much of the capacity is occupied at time=0 (`occupiedCap`). If customers at queue 1 should be rejected when queue 2 and 3 are full, set `rejectWhenFull = true`; otherwise `rejectWhenFull = false`.  
+
+```
+double[] lambda = {2}; double[] mu = {1.5,4,2.5}; int[] c = {2,1,2}; int[] cap = {20,20,20};
+int[] occupiedCap = {0,0,0}; boolean rejectWhenFull = false;
+```
+
+Create the model.
+
+```
+create network = new create(A,lambda,mu,c,cap,rejectWhenFull);
+```
+
+Prepare the evaluation calculations by plugging the `network` object into `evaluate`.
+
+```
+evaluate system = new evaluate(occupiedCap,network);
+```
+
+Evaluate the behavior of the system at time=5 with a precision of 1x10^-9.
+
+```
+system.uniformization(5,1e-9);
+```
+
+Get the marginal state distribution for each of the network queues.
+
+```
+double[][] dist = system.getMarginalDistributions();
+```
+
+Get the expected number of customers at each queue.
+
+```
+double[] expValue = system.expectedValue();
+```
+
+Evaluate the steady-state behavior of the system (i.e. at time=Inf) with a precision of 1x10^-6.
+
+```
+system.gauss_seidel(1e-6);
+```
+
+
 
 # License
 Copyright 2019 Anders Reenberg Andersen, PhD
