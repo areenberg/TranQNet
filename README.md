@@ -1,41 +1,37 @@
 # Purpose
-To easily and efficiently evaluate queueing networks based on numerical evaluations of their underlying Markov chain.
+This library is specialized in evaluating any M/M/C/K queueing network that can be defined by an adjacency matrix, i.e. the model does not have to exist on *product form*. A weighted directed adjacency matrix is used by the class `create` to automatically construct the infinitesimal generator for the network at hand. The resulting object is then used as input in the class `evaluate` to retrieve the behavior of the network.
 
-**Note:** *This branch is currently under heavy development, and the following information might not be up to date.*
+# Basic Overview
 
-# Content
-Currently this repository consists of a single Java-library (`mc_math.jar`) containing a single class. This class, denoted `evaluate`, can be used to numerically evaluate the state probability distribution of a transient queueing system with finite capacity, i.e. a queueing system of type M/M/C/K. The parameters of the system (arrival rate, service rate, number of servers and capacity) are homogeneous. The model then takes either the initial state probability distribution or the initial number of occupied servers. Uniformization (also denoted randomization and Jensen's method) is used to evaluate the probability distribution at time `t`. 
+## Files
 
-# Files
+- `mc_math.jar`: The library file.
 
-- `mc_math.jar`: Library containing the class `evaluate`.
+## Classes
 
-- `src/queueing`: Folder containing the source code for `mc_math.jar`.  
+- `create`: Automatically constructs the infinitesimal generator (the transition rate matrix) and various other parameters.
 
-# Usage
+- `evaluate`: Uses an object defined with `create` to evaluate the queueing network.
 
-## Class `evaluate`
-Calculates the state distribution at time `t` for an M/M/C/K queueing system.
+# Getting Started
+Firstly, download and add `mc_math.jar` to your Java-project.
 
-### Constructors
+Now import the `queueing` classes.
 
-- `evaluate(int ch, double l, double m, int c, int cap)`: Number of occupied servers as input.
+```
+import queueing.*;
+```
 
-- `evaluate(double[] initDist, double l, double m, int c, int cap)`: Initial state distribution as input.  
+Define the weighted directed adjacency matrix using the structure: (1) Sources nodes, (2) queueing nodes, and (3) sink node. In this example, we have three queueing nodes. A single source node feeds all arriving customers into the first queueing node. The flow then splits into three parts sending 45% of the customers to queue 2, 30% to queue 3, and 25% to the sink node. Queue 2 and 3 send all customers to the sink after their service has been completed. 
 
-- `ch`: Number of currently occupied servers.
-- `l`: Arrival rate. 
-- `m`: Service rate.
-- `c`: Total number of servers in the system.
-- `cap`: Capacity of the system.
-- `initDist`: Initial state probability distribution.
+```
+double[][] A = {{0,1,0,0,0},
+                {0,0,0.45,0.30,0.25},
+                {0,0,0,0,1},
+                {0,0,0,0,1},
+                {0,0,0,0,0}};
+```
 
-### Methods
-
-- `void uniformization(double t)`: Calculates the state distribution at time `t` using uniformization.
-- `double[] getStateDistribution()`: Returns the resulting state distribution.
-- `double expectedValue()`: Returns the expected state.
-- `double blockingProbability()`: Returns the blocking probability, i.e. the probability of attaining the last state in the state distribution.
 
 # License
 Copyright 2019 Anders Reenberg Andersen, PhD
