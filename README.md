@@ -1,5 +1,5 @@
 # Purpose
-The purpose of this library is to assist data scientists with evaluating both transient and steady-state M/M/C/K queueing networks. The library has been designed to make this process as painless as possible by restricting the input to the adjacency matrix and the basic parameters that characterize the system. Further the model *does not* have to exist on product form. Basically, a class (`create`) automatically constructs the infinitesimal generator for the network at hand. The resulting object is then used as input in an evaluation class (`evaluate`) to retrieve the behavior of the network.
+The purpose of this library is to assist data scientists in evaluating both transient and steady-state M/M/C/K queueing networks. The library has been designed to make this process as painless as possible by restricting the input to the adjacency matrix and the basic parameters that characterize the system. Further, the model *does not* have to exist on product form. Basically, a class (`create`) automatically constructs the infinitesimal generator for the network at hand. The resulting object is then used as input in an evaluation class (`evaluate`) to retrieve the behavior of the network.
 
 # Basic Overview
 
