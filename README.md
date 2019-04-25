@@ -3,9 +3,9 @@ The purpose of this library is to assist data scientists in evaluating both tran
 
 To conduct these calculations, one only has to follow these two steps:
 
-**Step 1**    Construct the infinitesimal generator for the network at hand. This is handled automatically by the `create` class.
+**Step 1:** Construct the infinitesimal generator for the network at hand. This is handled automatically by the `create` class.
 
-**Step 2**    Use the object created in the aforementioned step to retrieve the behavior of the network. This is handled by the `evaluate` class.
+**Step 2:** Use the object created in the aforementioned step to retrieve the behavior of the network. This is handled by the `evaluate` class.
 
 # Basic Overview
 
