@@ -1,5 +1,11 @@
-# Purpose
-This library is specialized in evaluating any M/M/C/K queueing network that can be defined by an adjacency matrix, i.e. the model does not have to exist on *product form*. A weighted directed adjacency matrix is used by the class `create` to automatically construct the infinitesimal generator for the network at hand. The resulting object is then used as input in the class `evaluate` to retrieve the behavior of the network.
+# Introduction
+The purpose of this library is to assist data scientists in evaluating both transient and steady-state M/M/C/K queueing networks. The library has been designed to make this process as painless as possible by restricting the input to the adjacency matrix and the basic parameters that characterize the system. Further, the model *does not* have to exist on product form.
+
+To conduct these calculations, one only has to follow these two steps:
+
+**Step 1:** Construct the infinitesimal generator for the network at hand. This is handled automatically by the `create` class.
+
+**Step 2:** Use the object created in the aforementioned step to retrieve the behavior of the network. This is handled by the `evaluate` class.
 
 # Basic Overview
 
