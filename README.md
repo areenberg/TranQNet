@@ -72,7 +72,7 @@ double[][] dist = system.getMarginalDistributions();
 Get the expected number of customers at each queue.
 
 ```
-double[] expValue = system.expectedValue();
+double[] expValue = system.expectedCustomers();
 ```
 
 Evaluate the steady-state behavior of the system (i.e. at time=Inf) with a precision of 1x10^-6.
