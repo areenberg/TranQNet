@@ -75,12 +75,17 @@ Get the marginal state distribution for each of the network queues.
 double[][] dist = system.getMarginalDistributions();
 ```
 
-Get the expected number of customers at each queue.
+Get the expected number of customers in each queueing node.
 
 ```
 double[] expValue = system.expectedCustomers();
 ```
 
+Get the probability of waiting on arrival at each queueing node.
+
+```
+double[] waitProb = system.waitingProbability();
+```
 
 # License
 Copyright 2019 Anders Reenberg Andersen, PhD
