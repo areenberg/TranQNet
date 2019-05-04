@@ -63,6 +63,12 @@ Evaluate the behavior of the system at time=5 with a precision of 1x10^-9.
 system.uniformization(5,1e-9);
 ```
 
+Evaluate the steady-state behavior of the system (i.e. at time=Inf) with a precision of 1x10^-6.
+
+```
+system.gauss_seidel(1e-6);
+```
+
 Get the marginal state distribution for each of the network queues.
 
 ```
@@ -74,13 +80,6 @@ Get the expected number of customers at each queue.
 ```
 double[] expValue = system.expectedCustomers();
 ```
-
-Evaluate the steady-state behavior of the system (i.e. at time=Inf) with a precision of 1x10^-6.
-
-```
-system.gauss_seidel(1e-6);
-```
-
 
 
 # License
