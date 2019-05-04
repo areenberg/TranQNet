@@ -38,7 +38,7 @@ double[][] A = {{0,1,0,0,0},
                 {0,0,0,0,0}};
 ```
 
-Define the remaining characteristics of the system, i.e. the arrival rate (`lambda`), service rates (`mu`), number of servers (`c`), capacity (`cap`), and how much of the capacity is occupied at time=0 (`occupiedCap`). If customers at queue 1 should be rejected when queue 2 and 3 are full, set `rejectWhenFull = true`; otherwise `rejectWhenFull = false`.  
+Define the remaining characteristics of the system, i.e. the arrival rate (`lambda`), service rates (`mu`), number of servers (`c`), capacity (`cap`), and how much of the capacity is occupied at time=0 (`occupiedCap`). If customers should be rejected when downstream queues are full, set `rejectWhenFull = true`; otherwise `rejectWhenFull = false`.  
 
 ```
 double[] lambda = {2}; double[] mu = {1.5,4,2.5}; int[] c = {2,1,2}; int[] cap = {20,20,20};
