@@ -87,6 +87,10 @@ Get the probability of waiting on arrival at each queue node.
 double[] waitProb = system.waitingProbability();
 ```
 
+# Citing this library
+
+[![DOI](https://zenodo.org/badge/175442551.svg)](https://zenodo.org/badge/latestdoi/175442551)
+
 # License
 Copyright 2019 Anders Reenberg Andersen, PhD
 
