@@ -1,5 +1,5 @@
 # Introduction
-The purpose of this library is to assist data scientists in evaluating both transient and steady-state M/M/C/K queueing networks. The library has been designed to make this process as painless as possible by restricting the input to the adjacency matrix and the basic parameters that characterize the system. Further, the model *does not* have to exist on product form.
+The purpose of this library is to provide a method for evaluating both transient and steady-state M/M/C/K single queues and queueing networks. The library has been designed to make this process as smooth as possible by restricting the input to the adjacency matrix and the basic parameters that characterize the system.
 
 Using the library involves the following two steps:
 
@@ -92,7 +92,7 @@ double[] waitProb = system.waitingProbability();
 [![DOI](https://zenodo.org/badge/175442551.svg)](https://zenodo.org/badge/latestdoi/175442551)
 
 # License
-Copyright 2019 Anders Reenberg Andersen, PhD
+Copyright 2021 Anders Reenberg Andersen, PhD
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
