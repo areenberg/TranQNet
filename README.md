@@ -30,13 +30,13 @@ import queueing.*;
 
 Define the weighted directed adjacency matrix using the structure: (1) Sources nodes, (2) queueing nodes, and (3) sink node. In this example, we have three queueing nodes. A single source node feeds all arriving customers into the first queueing node. The flow then splits into three parts sending 45% of the customers to queue 2, 30% to queue 3, and 25% to the sink node. Queue 2 and 3 send all customers to the sink after their service has been completed.
 
-```
+```java
 double[][] A = {{0,1,0,0,0},
                 {0,0,0.45,0.30,0.25},
                 {0,0,0,0,1},
                 {0,0,0,0,1},
                 {0,0,0,0,0}};
-```java
+```
 
 Define the remaining characteristics of the system, i.e. the arrival rate (`lambda`), service rates (`mu`), number of servers (`c`), capacity (`cap`), and how much of the capacity is occupied at time=0 (`occupiedCap`). If customers should be rejected when downstream queues are full, set `rejectWhenFull = true`; otherwise `rejectWhenFull = false`.  
 
