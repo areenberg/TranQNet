@@ -11,7 +11,7 @@ Using the library involves the following two steps:
 
 ## Files
 
-- `mc_math.jar`: The library file.
+- `mc_math-1.2.jar`: The library file.
 
 ## Classes
 
