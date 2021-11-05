@@ -24,7 +24,7 @@ Firstly, download and add `mc_math.jar` to your Java-project.
 
 Now import the `queueing` classes.
 
-```
+```java
 import queueing.*;
 ```
 
@@ -40,50 +40,50 @@ double[][] A = {{0,1,0,0,0},
 
 Define the remaining characteristics of the system, i.e. the arrival rate (`lambda`), service rates (`mu`), number of servers (`c`), capacity (`cap`), and how much of the capacity is occupied at time=0 (`occupiedCap`). If customers should be rejected when downstream queues are full, set `rejectWhenFull = true`; otherwise `rejectWhenFull = false`.  
 
-```
+```java
 double[] lambda = {2}; double[] mu = {1.5,4,2.5}; int[] c = {2,1,2}; int[] cap = {20,20,20};
 int[] occupiedCap = {0,0,0}; boolean rejectWhenFull = false;
 ```
 
 Create the model.
 
-```
+```java
 create network = new create(A,lambda,mu,c,cap,rejectWhenFull);
 ```
 
 Prepare the evaluation calculations by plugging the `network` object into `evaluate`.
 
-```
+```java
 evaluate system = new evaluate(occupiedCap,network);
 ```
 
 Evaluate the behavior of the system at time=5 with a precision of 1x10^-9.
 
-```
+```java
 system.uniformization(5,1e-9);
 ```
 
 Evaluate the steady-state behavior of the system (i.e. at time=Inf) with a precision of 1x10^-6.
 
-```
+```java
 system.gauss_seidel(1e-6);
 ```
 
 Get the marginal state distribution for each of the network queues.
 
-```
+```java
 double[][] dist = system.getMarginalDistributions();
 ```
 
 Get the expected number of customers within each queue node.
 
-```
+```java
 double[] expValue = system.expectedCustomers();
 ```
 
 Get the probability of waiting on arrival at each queue node.
 
-```
+```java
 double[] waitProb = system.waitingProbability();
 ```
 
