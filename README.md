@@ -91,6 +91,9 @@ double[] waitProb = system.waitingProbability();
 
 [![DOI](https://zenodo.org/badge/175442551.svg)](https://zenodo.org/badge/latestdoi/175442551)
 
+
+Anders Reenberg Andersen. (2021). areenberg/mc_math: Converted to Maven project (v1.2). Zenodo. https://doi.org/10.5281/zenodo.5650104
+
 # License
 Copyright 2021 Anders Reenberg Andersen, PhD
 
